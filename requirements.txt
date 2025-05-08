@@ -1,1 +1,8 @@
 pandas
+matplotlib
+xgboost
+scikit-learn
+imbalanced-learn
+fastapi 
+uvicorn
+streamlit
