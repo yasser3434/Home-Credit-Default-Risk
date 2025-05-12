@@ -6,10 +6,8 @@ from sklearn.preprocessing import LabelEncoder
 st.set_page_config(layout="wide")
 st.title("📊 Loan Default Risk Prediction")
 
-# Load dataset
 df = pd.read_csv("/home/yasser/Desktop/machine_learning/data/application_train.csv")
 
-# Fit encoders for categorical features
 encoders = {}
 categorical_fields = [
     "CODE_GENDER",
@@ -25,14 +23,12 @@ for col in categorical_fields:
     le.fit(df[col])
     encoders[col] = le
 
-# User Input
 sk_id = st.number_input("Enter SK_ID_CURR", step=1)
 
-# Check if SK_ID_CURR exists in the dataset
 if sk_id in df["SK_ID_CURR"].values:
     st.success("Profile found!")
-    user_data = df[df["SK_ID_CURR"] == sk_id].iloc[0]  # Retrieve the user's data
-    age_years = abs(user_data["DAYS_BIRTH"]) // 365  # Convert days to years
+    user_data = df[df["SK_ID_CURR"] == sk_id].iloc[0]  
+    age_years = abs(user_data["DAYS_BIRTH"]) // 365 
     gender = user_data["CODE_GENDER"]
     education = user_data["NAME_EDUCATION_TYPE"]
     housing = user_data["NAME_HOUSING_TYPE"]
@@ -41,7 +37,6 @@ if sk_id in df["SK_ID_CURR"].values:
     amt_income = user_data["AMT_INCOME_TOTAL"]
     amt_credit = user_data["AMT_CREDIT"]
 
-    # Display user data
     st.write("User's data retrieved:")
     st.write(f"Age: {age_years} years")
     st.write(f"Gender: {gender}")
@@ -74,10 +69,9 @@ with st.form("prediction_form"):
     submitted = st.form_submit_button("📈 Predict")
 
     if submitted:
-        # Prepare the profile for prediction (from user input or the retrieved profile)
         profile = {
             "SK_ID_CURR": int(sk_id),
-            "DAYS_BIRTH": -int(age_years * 365),  # Convert years to negative days
+            "DAYS_BIRTH": -int(age_years * 365),
             "AMT_INCOME_TOTAL": int(amt_income),
             "AMT_CREDIT": int(amt_credit),
             "CODE_GENDER": int(encoders["CODE_GENDER"].transform([gender])[0]),
